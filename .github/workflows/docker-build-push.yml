@@ -1,9 +1,8 @@
 name: 构建并保存 x86 Docker 镜像
 
 on:
-  push:
-    workflow_dispatch:
-
+  workflow_dispatch:
+    
 jobs:
   build-and-save:
     runs-on: ubuntu-latest
