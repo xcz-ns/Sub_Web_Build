@@ -1,4 +1,4 @@
-name: 构建并保存 x86 Docker 镜像
+name: 构建保存镜像
 
 on:
   workflow_dispatch:
