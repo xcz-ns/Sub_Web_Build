@@ -1,7 +1,8 @@
 name: 构建并保存 x86 Docker 镜像
 
 on:
-  workflow_dispatch:
+  push:
+    workflow_dispatch:
 
 jobs:
   build-and-save:
@@ -17,22 +18,19 @@ jobs:
     - name: 构建 Docker 镜像
       id: build-image
       run: |
-        # 使用 docker build 构建镜像，并确认构建完成
         docker build --platform linux/amd64 -t careywong/subweb:latest .
-        # 输出当前 Docker 镜像列表，确认镜像已构建
         docker images
 
     - name: 保存 Docker 镜像为 tar 包
       run: |
-        # 确保镜像存在后，保存为 tar 包
         docker save careywong/subweb:latest -o subweb_latest.tar
-        # 检查 tar 文件是否成功创建
         ls -lh subweb_latest.tar
 
     - name: 上传 Docker 镜像到 GitHub Releases
       uses: ncipollo/release-action@v1
       with:
         artifacts: subweb_latest.tar
-        tag: ${{ github.sha }}
+        tag: v1.0.0  # 使用一个有效的版本号标签，替换掉 Git commit 的 SHA
         name: subweb_latest.tar
-        overwrite: true
+        generateReleaseNotes: false
+        makeLatest: true
