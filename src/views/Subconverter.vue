@@ -232,75 +232,140 @@ export default {
           Trojan: "trojan",
           Surge3: "surge&ver=3",
         },
-        backendOptions: [{ value: "http://127.0.0.1:25500/sub?" }],
+        backendOptions: [{ value: "https://clash.xczns.top:58808/sub?" }],
         remoteConfig: [
           {
-            label: "universal",
+            label: "Personal",
             options: [
               {
-                label: "No-Urltest",
+                label: "GeneralRule_Full",
                 value:
-                  "https://cdn.jsdelivr.net/gh/SleepyHeeead/subconverter-config@master/remote-config/universal/no-urltest.ini"
+                  "http://xczns.top:6086/VPN/GeneralClashRule/GeneralRule_Full.ini"
               },
               {
-                label: "Urltest",
+                label: "GeneralRule_Min",
                 value:
-                  "https://cdn.jsdelivr.net/gh/SleepyHeeead/subconverter-config@master/remote-config/universal/urltest.ini"
+                  "http://xczns.top:6086/VPN/GeneralClashRule/GeneralRule_Min.ini"
               }
             ]
           },
-          {
-            label: "customized",
+          {  
+            label: "ACL4SSR_Local",
             options: [
               {
-                label: "Maying",
+                label: "ACL4SSR.ini",
                 value:
-                  "https://cdn.jsdelivr.net/gh/SleepyHeeead/subconverter-config@master/remote-config/customized/maying.ini"
+                   "config/ACL4SSR.ini"
               },
               {
-                label: "Ytoo",
+                label: "ACL4SSR_AdblockPlus.ini",
                 value:
-                  "https://cdn.jsdelivr.net/gh/SleepyHeeead/subconverter-config@master/remote-config/customized/ytoo.ini"
+                   "config/ACL4SSR_AdblockPlus.ini"
               },
               {
-                label: "FlowerCloud",
+                label: "ACL4SSR_BackCN.ini",
                 value:
-                  "https://cdn.jsdelivr.net/gh/SleepyHeeead/subconverter-config@master/remote-config/customized/flowercloud.ini"
+                   "config/ACL4SSR_BackCN.ini"
               },
               {
-                label: "Nexitally",
+                label: "ACL4SSR_Mini.ini",
                 value:
-                  "https://cdn.jsdelivr.net/gh/SleepyHeeead/subconverter-config@master/remote-config/customized/nexitally.ini"
+                   "config/ACL4SSR_Mini.ini"
               },
               {
-                label: "SoCloud",
+                label: "ACL4SSR_Mini_Fallback.ini",
                 value:
-                  "https://cdn.jsdelivr.net/gh/SleepyHeeead/subconverter-config@master/remote-config/customized/socloud.ini"
+                   "config/ACL4SSR_Mini_Fallback.ini"
               },
               {
-                label: "ARK",
+                label: "ACL4SSR_Mini_MultiMode.ini",
                 value:
-                  "https://cdn.jsdelivr.net/gh/SleepyHeeead/subconverter-config@master/remote-config/customized/ark.ini"
+                   "config/ACL4SSR_Mini_MultiMode.ini"
               },
               {
-                label: "ssrCloud",
+                label: "ACL4SSR_Mini_NoAuto.ini",
                 value:
-                  "https://cdn.jsdelivr.net/gh/SleepyHeeead/subconverter-config@master/remote-config/customized/ssrcloud.ini"
-              }
-            ]
-          },
-          {
-            label: "Special",
-            options: [
-              {
-                label: "NeteaseUnblock(仅规则，No-Urltest)",
-                value:
-                  "https://cdn.jsdelivr.net/gh/SleepyHeeead/subconverter-config@master/remote-config/special/netease.ini"
+                   "config/ACL4SSR_Mini_NoAuto.ini"
               },
               {
-                label: "Basic(仅GEOIP CN + Final)",
+                label: "ACL4SSR_NoApple.ini",
                 value:
-                  "https://cdn.jsdelivr.net/gh/SleepyHeeead/subconverter-config@master/remote-config/special/basic.ini"
+                   "config/ACL4SSR_NoApple.ini"
+              },
+              {
+                label: "ACL4SSR_NoAuto.ini",
+                value:
+                   "config/ACL4SSR_NoAuto.ini"
+              },
+              {
+                label: "ACL4SSR_NoAuto_NoApple.ini",
+                value:
+                   "config/ACL4SSR_NoAuto_NoApple.ini"
+              },
+              {
+                label: "ACL4SSR_NoAuto_NoApple_NoMicrosoft.ini",
+                value:
+                   "config/ACL4SSR_NoAuto_NoApple_NoMicrosoft.ini"
+              },
+              {
+                label: "ACL4SSR_NoMicrosoft.ini",
+                value:
+                   "config/ACL4SSR_NoMicrosoft.ini"
+              },
+              {
+                label: "ACL4SSR_Online.ini",
+                value:
+                   "config/ACL4SSR_Online.ini"
+              },
+              {
+                label: "ACL4SSR_Online_AdblockPlus.ini",
+                value:
+                   "config/ACL4SSR_Online_AdblockPlus.ini"
+              },
+              {
+                label: "ACL4SSR_Online_Full.ini",
+                value:
+                   "config/ACL4SSR_Online_Full.ini"
+              },
+              {
+                label: "ACL4SSR_Online_Full_AdblockPlus.ini",
+                value:
+                   "config/ACL4SSR_Online_Full_AdblockPlus.ini"
+              },
+              {
+                label: "ACL4SSR_Online_Full_NoAuto.ini",
+                value:
+                   "config/ACL4SSR_Online_Full_NoAuto.ini"
+              },
+              {
+                label: "ACL4SSR_Online_Mini.ini",
+                value:
+                   "config/ACL4SSR_Online_Mini.ini"
+              },
+              {
+                label: "ACL4SSR_Online_Mini_AdblockPlus.ini",
+                value:
+                   "config/ACL4SSR_Online_Mini_AdblockPlus.ini"
+              },
+              {
+                label: "ACL4SSR_Online_Mini_NoAuto.ini",
+                value:
+                   "config/ACL4SSR_Online_Mini_NoAuto.ini"
+              },
+              {
+                label: "ACL4SSR_WithChinaIp.ini",
+                value:
+                   "config/ACL4SSR_WithChinaIp.ini"
+              },
+              {
+                label: "ACL4SSR_WithChinaIp_WithGFW.ini",
+                value:
+                   "config/ACL4SSR_WithChinaIp_WithGFW.ini"
+              },
+              {
+                label: "ACL4SSR_WithGFW.ini",
+                value:
+                   "config/ACL4SSR_WithGFW.ini"
               }
             ]
           }
@@ -309,11 +374,11 @@ export default {
       form: {
         sourceSubUrl: "",
         clientType: "",
-        customBackend: "",
+        customBackend: "https://clash.xczns.top:58808/sub?",
         remoteConfig: "",
-        excludeRemarks: "",
+        excludeRemarks: "官网|刷新|套餐|重置|流量",
         includeRemarks: "",
-        filename: "",
+        filename: "红杏云",
         emoji: true,
         nodeList: false,
         extraset: false,
