@@ -29,7 +29,7 @@ jobs:
       uses: ncipollo/release-action@v1
       with:
         artifacts: subweb_latest.tar
-        tag: v1.0.0  # 使用一个有效的版本号标签，替换掉 Git commit 的 SHA
+        tag: v$(date +%Y%m%d_%H%M%S)
         name: subweb_latest.tar
         generateReleaseNotes: false
         makeLatest: true
