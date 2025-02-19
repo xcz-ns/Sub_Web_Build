@@ -25,11 +25,15 @@ jobs:
         docker save subweb:latest -o subweb_latest.tar
         ls -lh subweb_latest.tar
 
+    - name: 设置动态标签
+      id: set-tag
+      run: echo "RELEASE_TAG=v$(date +'%Y%m%d.%H%M%S')" >> $GITHUB_ENV
+
     - name: 上传 Docker 镜像到 GitHub Releases
       uses: ncipollo/release-action@v1
       with:
         artifacts: subweb_latest.tar
-        tag: v$(date +%Y%m%d.%H%M%S)
+        tag: ${{ env.RELEASE_TAG }}
         name: subweb_latest.tar
         generateReleaseNotes: false
         makeLatest: true
