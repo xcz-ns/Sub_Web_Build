@@ -250,7 +250,7 @@ export default {
             ]
           },
           {
-               label: "GeneralRule_Min",
+               label: "Shadowrocket",
                value:
                   "http://xczns.top:6086/VPN/GeneralClashRule/Shadowrocket.ini"
               }
