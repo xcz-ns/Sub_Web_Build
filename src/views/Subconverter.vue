@@ -249,6 +249,13 @@ export default {
               }
             ]
           },
+          {
+               label: "GeneralRule_Min",
+               value:
+                  "http://xczns.top:6086/VPN/GeneralClashRule/Shadowrocket.ini"
+              }
+            ]
+          },
           {  
             label: "ACL4SSR_Local",
             options: [
