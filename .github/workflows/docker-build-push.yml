@@ -1,10 +1,20 @@
-name: 构建保存镜像
+name: 构建保存并推送镜像
 
 on:
   workflow_dispatch:
-    
+  schedule:
+    - cron: '0 22,4 * * *'  # 6点和12点（北京时间），UTC时间提前8小时
+
+env:
+  ALIYUN_REGISTRY: "${{ secrets.ALIYUN_REGISTRY }}"
+  ALIYUN_NAME_SPACE: "${{ secrets.ALIYUN_NAME_SPACE }}"
+  ALIYUN_REGISTRY_USER: "${{ secrets.ALIYUN_REGISTRY_USER }}"
+  ALIYUN_REGISTRY_PASSWORD: "${{ secrets.ALIYUN_REGISTRY_PASSWORD }}"
+  TG_BOT_TOKEN: "${{ secrets.TG_BOT_TOKEN }}"
+  TG_CHAT_ID: "${{ secrets.TG_CHAT_ID }}"
+
 jobs:
-  build-and-save:
+  build-and-release:
     runs-on: ubuntu-latest
 
     steps:
@@ -37,3 +47,36 @@ jobs:
         name: subweb_latest.tar
         generateReleaseNotes: false
         makeLatest: true
+
+    - name: 登录阿里云容器镜像服务
+      run: |
+        echo "${{ env.ALIYUN_REGISTRY_PASSWORD }}" | docker login $ALIYUN_REGISTRY -u $ALIYUN_REGISTRY_USER --password-stdin
+
+    - name: 推送镜像到阿里云
+      id: push-image
+      run: |
+        set -e
+        IMAGE_NAME=subweb:latest
+        ALIYUN_IMAGE=$ALIYUN_REGISTRY/$ALIYUN_NAME_SPACE/$IMAGE_NAME
+        docker tag $IMAGE_NAME $ALIYUN_IMAGE
+        if docker push $ALIYUN_IMAGE; then
+          echo "PUSH_RESULT=success" >> $GITHUB_ENV
+        else
+          echo "PUSH_RESULT=failure" >> $GITHUB_ENV
+        fi
+        docker rmi $IMAGE_NAME $ALIYUN_IMAGE || true
+
+    - name: 发送 Telegram 通知
+      if: always()
+      run: |
+        IMAGE_NAME=subweb:latest
+        BUILD_TIME=$(TZ='Asia/Shanghai' date "+%Y-%m-%d %H:%M:%S")
+        STATUS="失败"
+        [[ "${{ env.PUSH_RESULT }}" == "success" ]] && STATUS="成功"
+
+        MSG="📦 镜像名称：$IMAGE_NAME\n📅 构建时间：$BUILD_TIME\n✅ 状态：$STATUS"
+
+        printf "%b" "$MSG" | curl -s -X POST "https://api.telegram.org/bot$TG_BOT_TOKEN/sendMessage" \
+          -d chat_id="$TG_CHAT_ID" \
+          -d parse_mode="Markdown" \
+          --data-urlencode "text=$(printf "%b" "$MSG")"
