@@ -69,7 +69,7 @@ jobs:
     - name: 发送 Telegram 通知
       if: always()
       run: |
-        IMAGE_NAME=sub-web 镜像构建
+        IMAGE_NAME=subweb:latest
         BUILD_TIME=$(TZ='Asia/Shanghai' date "+%Y-%m-%d %H:%M:%S")
         STATUS="sub-web 镜像构建失败"
         [[ "${{ env.PUSH_RESULT }}" == "success" ]] && STATUS="sub-web 镜像构建成功"
