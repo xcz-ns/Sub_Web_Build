@@ -3,7 +3,7 @@ name: 构建 sub-web 镜像
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 4,10,16,22 * * *' # 北京时间 12:00、18:00、00:00、06:00
+    - cron: '0 0 * * 3,6'
 
 env:
   ALIYUN_REGISTRY: "${{ secrets.ALIYUN_REGISTRY }}"
