@@ -1,4 +1,4 @@
-name: 构建保存并推送镜像
+name: 构建 sub-web 镜像
 
 on:
   workflow_dispatch:
@@ -71,8 +71,8 @@ jobs:
       run: |
         IMAGE_NAME=subweb:latest
         BUILD_TIME=$(TZ='Asia/Shanghai' date "+%Y-%m-%d %H:%M:%S")
-        STATUS="失败"
-        [[ "${{ env.PUSH_RESULT }}" == "success" ]] && STATUS="成功"
+        STATUS="sub-web 镜像构建失败"
+        [[ "${{ env.PUSH_RESULT }}" == "success" ]] && STATUS="sub-web 镜像构建成功"
 
         MSG="📦 镜像名称：$IMAGE_NAME\n📅 构建时间：$BUILD_TIME\n✅ 状态：$STATUS"
 
