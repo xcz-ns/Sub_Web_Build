@@ -53,15 +53,35 @@ jobs:
         fi
         docker rmi $IMAGE_NAME $ALIYUN_IMAGE || true
 
+    - name: 推送镜像到私人仓库
+      run: |
+        set -e
+        IMAGE_NAME=subweb:latest
+        PRIVATE_REGISTRY=dr.xczns.top:58808
+        PRIVATE_IMAGE=$PRIVATE_REGISTRY/$IMAGE_NAME
+
+        docker tag $IMAGE_NAME $PRIVATE_IMAGE
+        if docker push $PRIVATE_IMAGE; then
+          echo "PRIVATE_PUSH_RESULT=success" >> $GITHUB_ENV
+        else
+          echo "PRIVATE_PUSH_RESULT=failure" >> $GITHUB_ENV
+        fi
+
+        docker rmi $PRIVATE_IMAGE || true
+
     - name: 发送 Telegram 通知
       if: always()
       run: |
         DISPLAY_NAME="sub-web:latest"
         BUILD_TIME=$(TZ='Asia/Shanghai' date "+%Y-%m-%d %H:%M:%S")
-        STATUS="sub-web 镜像构建失败"
-        [[ "${{ env.PUSH_RESULT }}" == "success" ]] && STATUS="sub-web 镜像构建成功"
-
-        MSG="📦 镜像名称：$DISPLAY_NAME\n📅 构建时间：$BUILD_TIME\n✅ 状态：$STATUS"
+        
+        STATUS1="阿里云 ✅"
+        STATUS2="私人仓库 ❌"
+        
+        [[ "${{ env.PUSH_RESULT }}" == "failure" ]] && STATUS1="阿里云 ❌"
+        [[ "${{ env.PRIVATE_PUSH_RESULT }}" == "success" ]] && STATUS2="私人仓库 ✅"
+        
+        MSG="📦 镜像名称：$DISPLAY_NAME\n📅 构建时间：$BUILD_TIME\n\n📤 推送状态：\n- $STATUS1\n- $STATUS2"
 
         printf "%b" "$MSG" | curl -s -X POST "https://api.telegram.org/bot$TG_BOT_TOKEN/sendMessage" \
           -d chat_id="$TG_CHAT_ID" \
