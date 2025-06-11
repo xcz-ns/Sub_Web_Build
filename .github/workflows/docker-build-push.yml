@@ -51,7 +51,7 @@ jobs:
         else
           echo "PUSH_RESULT=failure" >> $GITHUB_ENV
         fi
-        docker rmi $IMAGE_NAME $ALIYUN_IMAGE || true
+        docker rmi $ALIYUN_IMAGE || true
 
     - name: 推送镜像到私人仓库
       run: |
