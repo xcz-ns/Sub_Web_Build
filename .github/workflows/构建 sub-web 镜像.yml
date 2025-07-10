@@ -87,3 +87,20 @@ jobs:
           -d chat_id="$TG_CHAT_ID" \
           -d parse_mode="Markdown" \
           --data-urlencode "text=$(printf "%b" "$MSG")"
+          
+    - name: 删除旧的 Workflow 运行记录
+      uses: Mattraks/delete-workflow-runs@v2
+      with:
+        token: ${{ secrets.REPO_TOKEN }}
+        repository: ${{ github.repository }}
+        retain_days: 0           # 表示清理所有超过 0 天的记录
+        keep_minimum_runs: 0     # 最少保留最近 0 次运行记录（你可以改成你需要的数量）
+        
+      - name: 删除自动发布的旧固件
+        uses: shidahuilang/delete-older-releases@main
+        if: steps.compile.outcome == 'success' && env.UPLOAD_RELEASE == 'true'
+        with:
+          keep_latest: 1 #保留多少个releases不删除
+          delete_tags: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
