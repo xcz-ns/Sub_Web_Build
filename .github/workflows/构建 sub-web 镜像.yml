@@ -82,7 +82,6 @@ jobs:
         
     - name: 删除自动发布的旧固件
       uses: shidahuilang/delete-older-releases@main
-      if: steps.compile.outcome == 'success' && env.UPLOAD_RELEASE == 'true'
       with:
         keep_latest: 1 #保留多少个releases不删除
         delete_tags: true
