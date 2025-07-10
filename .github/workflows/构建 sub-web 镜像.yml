@@ -53,22 +53,6 @@ jobs:
         fi
         docker rmi $ALIYUN_IMAGE || true
 
-    - name: 推送镜像到私人仓库
-      run: |
-        set -e
-        IMAGE_NAME=subweb:latest
-        PRIVATE_REGISTRY=dr.xczns.top:58808
-        PRIVATE_IMAGE=$PRIVATE_REGISTRY/$IMAGE_NAME
-
-        docker tag $IMAGE_NAME $PRIVATE_IMAGE
-        if docker push $PRIVATE_IMAGE; then
-          echo "PRIVATE_PUSH_RESULT=success" >> $GITHUB_ENV
-        else
-          echo "PRIVATE_PUSH_RESULT=failure" >> $GITHUB_ENV
-        fi
-
-        docker rmi $PRIVATE_IMAGE || true
-
     - name: 发送 Telegram 通知
       if: always()
       run: |
