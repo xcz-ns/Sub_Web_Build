@@ -60,7 +60,6 @@ jobs:
         BUILD_TIME=$(TZ='Asia/Shanghai' date "+%Y-%m-%d %H:%M:%S")
         
         STATUS1="阿里云 ✅"
-        STATUS2="私人仓库 ❌"
         
         [[ "${{ env.PUSH_RESULT }}" == "failure" ]] && STATUS1="阿里云 ❌"
         [[ "${{ env.PRIVATE_PUSH_RESULT }}" == "success" ]] && STATUS2="私人仓库 ✅"
