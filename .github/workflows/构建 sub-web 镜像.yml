@@ -69,30 +69,30 @@ jobs:
         if [ "${{ env.PUSH_RESULT }}" == "success" ]; then
           STATUS="阿里云 ✅"
           MSG+="*推送状态*: $STATUS\n"
-          MSG+="*订阅地址*: \`$FULL_IMAGE_PATH\`" # 仅在成功时显示订阅地址
+          MSG+="*订阅地址*: \`$FULL_IMAGE_PATH\`"
         else
           STATUS="阿里云 ❌"
           MSG+="*推送状态*: $STATUS"
         fi
         
-        # 发送通知
+        # 发送通知 (注意最后一行 text=... 的变化)
         curl -s -X POST "https://api.telegram.org/bot${{ env.TG_BOT_TOKEN }}/sendMessage" \
           -d chat_id="${{ env.TG_CHAT_ID }}" \
           -d parse_mode="Markdown" \
-          --data-urlencode "text=${MSG}"
+          --data-urlencode "text=$(printf '%b' "${MSG}")"
 
     - name: 删除旧的 Workflow 运行记录
       uses: Mattraks/delete-workflow-runs@v2
       with:
         token: ${{ secrets.REPO_TOKEN }}
         repository: ${{ github.repository }}
-        retain_days: 0          # 清理所有超过 0 天的记录
-        keep_minimum_runs: 0    # 最少保留 0 次运行记录
+        retain_days: 0
+        keep_minimum_runs: 0
 
     - name: 删除自动发布的旧固件
       uses: shidahuilang/delete-older-releases@main
       with:
-        keep_latest: 1 # 保留最新的 1 个 release
+        keep_latest: 1
         delete_tags: true
       env:
         GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
