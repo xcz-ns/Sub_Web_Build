@@ -54,35 +54,45 @@ jobs:
         docker rmi $ALIYUN_IMAGE || true
 
     - name: 发送 Telegram 通知
-      if: always()
+      if: always() # 保证此步骤总是执行，无论前面是否失败
       run: |
         DISPLAY_NAME="sub-web:latest"
+        FULL_IMAGE_PATH="${{ env.ALIYUN_REGISTRY }}/${{ env.ALIYUN_NAME_SPACE }}/subweb:latest"
         BUILD_TIME=$(TZ='Asia/Shanghai' date "+%Y-%m-%d %H:%M:%S")
         
-        STATUS1="阿里云 ✅"
-        
-        [[ "${{ env.PUSH_RESULT }}" == "failure" ]] && STATUS1="阿里云 ❌"
-        [[ "${{ env.PRIVATE_PUSH_RESULT }}" == "success" ]] && STATUS2="私人仓库 ✅"
-        
-        MSG="📦 镜像名称：$DISPLAY_NAME\n📅 构建时间：$BUILD_TIME\n\n📤 推送状态：\n- $STATUS1\n- $STATUS2"
+        # 基础消息
+        MSG="📦 *镜像构建通知*\n\n"
+        MSG+="*镜像名称*: \`$DISPLAY_NAME\`\n"
+        MSG+="*构建时间*: \`$BUILD_TIME\`\n"
 
-        printf "%b" "$MSG" | curl -s -X POST "https://api.telegram.org/bot$TG_BOT_TOKEN/sendMessage" \
-          -d chat_id="$TG_CHAT_ID" \
+        # 根据推送结果添加不同内容
+        if [ "${{ env.PUSH_RESULT }}" == "success" ]; then
+          STATUS="阿里云 ✅"
+          MSG+="*推送状态*: $STATUS\n"
+          MSG+="*订阅地址*: \`$FULL_IMAGE_PATH\`" # 仅在成功时显示订阅地址
+        else
+          STATUS="阿里云 ❌"
+          MSG+="*推送状态*: $STATUS"
+        fi
+        
+        # 发送通知
+        curl -s -X POST "https://api.telegram.org/bot${{ env.TG_BOT_TOKEN }}/sendMessage" \
+          -d chat_id="${{ env.TG_CHAT_ID }}" \
           -d parse_mode="Markdown" \
-          --data-urlencode "text=$(printf "%b" "$MSG")"
-          
+          --data-urlencode "text=${MSG}"
+
     - name: 删除旧的 Workflow 运行记录
       uses: Mattraks/delete-workflow-runs@v2
       with:
         token: ${{ secrets.REPO_TOKEN }}
         repository: ${{ github.repository }}
-        retain_days: 0           # 表示清理所有超过 0 天的记录
-        keep_minimum_runs: 0     # 最少保留最近 0 次运行记录（你可以改成你需要的数量）
-        
+        retain_days: 0          # 清理所有超过 0 天的记录
+        keep_minimum_runs: 0    # 最少保留 0 次运行记录
+
     - name: 删除自动发布的旧固件
       uses: shidahuilang/delete-older-releases@main
       with:
-        keep_latest: 1 #保留多少个releases不删除
+        keep_latest: 1 # 保留最新的 1 个 release
         delete_tags: true
       env:
         GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
