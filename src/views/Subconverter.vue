@@ -238,6 +238,11 @@ export default {
             label: "Personal",
             options: [
               {
+                label: "Custom_Clash",
+                value:
+                  "http://xczns.top:6086/VPN/Aethersailor/Custom_Clash.ini"
+              },
+              {
                 label: "GeneralRule_Full",
                 value:
                   "http://xczns.top:6086/VPN/GeneralClashRule/GeneralRule_Full.ini"
