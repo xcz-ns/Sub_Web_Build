@@ -386,7 +386,7 @@ export default {
         clientType: "",
         customBackend: "https://clash.xczns.top:58808/sub?",
         remoteConfig: "",
-        excludeRemarks: "官网|刷新|套餐|重置|流量|波特兰|达拉斯|俄勒冈|凤凰城|费利蒙|硅谷|拉斯维加斯|洛杉矶|圣何塞|圣克拉拉|西雅图|芝加哥|日本|川日|东京|大阪|泉日|埼玉|沪日|深日|(?<!尼|-)日|JP|Japan|🇯🇵|KR|Korea|KOR|首尔|韩|韓|加拿大|Canada|渥太华|温哥华|卡尔加里|英国|Britain|United Kingdom|England|伦敦|法国|France|巴黎|德国|Germany|柏林|法兰克福|荷兰|Netherlands|阿姆斯特丹|土耳其|Turkey|Türkiye",
+        excludeRemarks: "官网|刷新|套餐|重置|流量",
         includeRemarks: "",
         filename: "红杏云",
         emoji: true,
