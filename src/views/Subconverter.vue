@@ -243,19 +243,9 @@ export default {
                   "http://xczns.top:6086/VPN/Aethersailor/Custom_Clash.ini"
               },
               {
-                label: "GeneralRule_Full",
-                value:
-                  "http://xczns.top:6086/VPN/GeneralClashRule/GeneralRule_Full.ini"
-              },
-              {
-                label: "GeneralRule_Min",
-                value:
-                  "http://xczns.top:6086/VPN/GeneralClashRule/GeneralRule_Min.ini"
-              },
-              {
                label: "Shadowrocket",
                value:
-                  "http://xczns.top:6086/VPN/GeneralClashRule/Shadowrocket.ini"
+                  "http://xczns.top:6086/VPN/Aethersailor/Shadowrocket.ini"
               }
             ]
           },
