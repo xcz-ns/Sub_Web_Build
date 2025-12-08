@@ -245,7 +245,7 @@ export default {
               {
                label: "Shadowrocket",
                value:
-                  "http://xczns.top:6086/VPN/Aethersailor/Shadowrocket.ini"
+                  "http://xczns.top:6086/VPN/GeneralClashRule/Shadowrocket.ini"
               }
             ]
           },
