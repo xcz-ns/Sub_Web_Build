@@ -5,6 +5,10 @@ on:
   schedule:
     - cron: '0 0 * * 3,6'
 
+  push:
+    paths:
+      - 'src/views/Subconverter.vue'   # 👈 当这个文件有 commit 时也运行
+
 env:
   ALIYUN_REGISTRY: "${{ secrets.ALIYUN_REGISTRY }}"
   ALIYUN_NAME_SPACE: "${{ secrets.ALIYUN_NAME_SPACE }}"
