@@ -1,4 +1,4 @@
-name: 构建 sub-web 镜像
+name: 构建 sub-web 镜像（安全版）
 
 on:
   workflow_dispatch:
@@ -48,7 +48,7 @@ jobs:
       run: |
         echo "${{ env.ALIYUN_REGISTRY_PASSWORD }}" | docker login $ALIYUN_REGISTRY -u $ALIYUN_REGISTRY_USER --password-stdin
 
-    - name: 推送镜像到阿里云
+    - name: 推送镜像到阿里云（安全版）
       id: push-image
       run: |
         set -e
@@ -56,6 +56,7 @@ jobs:
         IMAGE_NAME=subweb:$TODAY_TAG
         ALIYUN_IMAGE=$ALIYUN_REGISTRY/$ALIYUN_NAME_SPACE/subweb:$TODAY_TAG
         docker tag $IMAGE_NAME $ALIYUN_IMAGE
+
         if docker push $ALIYUN_IMAGE; then
           echo "PUSH_RESULT=success" >> $GITHUB_ENV
         else
@@ -63,10 +64,14 @@ jobs:
         fi
         docker rmi $ALIYUN_IMAGE || true
 
-        # 自动清理阿里云旧镜像，只保留最近10个
+        # ===== 安全删除旧镜像，只保留最近10个 =====
         REPO=$ALIYUN_NAME_SPACE/subweb
-        TAGS=$(curl -s -u "$ALIYUN_REGISTRY_USER:$ALIYUN_REGISTRY_PASSWORD" \
-          "https://$ALIYUN_REGISTRY/v2/$REPO/tags/list" | jq -r '.tags | sort | reverse')
+        TAGS_JSON=$(curl -s -u "$ALIYUN_REGISTRY_USER:$ALIYUN_REGISTRY_PASSWORD" \
+          "https://$ALIYUN_REGISTRY/v2/$REPO/tags/list")
+
+        # 如果仓库为空或者 tags=null，使用空数组 []
+        TAGS=$(echo "$TAGS_JSON" | jq -r '.tags // [] | sort | reverse')
+
         COUNT=0
         for TAG in $TAGS; do
           COUNT=$((COUNT+1))
