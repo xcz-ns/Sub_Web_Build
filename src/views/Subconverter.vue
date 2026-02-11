@@ -378,7 +378,7 @@ export default {
         remoteConfig: "",
         excludeRemarks: "官网|刷新|套餐|重置|流量",
         includeRemarks: "",
-        filename: "hongxing.yaml",
+        filename: "clash_config.yaml",
         emoji: true,
         nodeList: false,
         extraset: false,
