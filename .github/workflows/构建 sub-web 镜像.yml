@@ -48,32 +48,47 @@ jobs:
       run: |
         echo "${{ env.ALIYUN_REGISTRY_PASSWORD }}" | docker login $ALIYUN_REGISTRY -u $ALIYUN_REGISTRY_USER --password-stdin
 
-    - name: 推送镜像到阿里云（安全版）
+    - name: 推送镜像到阿里云（安全版 & Latest）
       id: push-image
       run: |
         set -e
         TODAY_TAG=$(date +'%m%d')
         IMAGE_NAME=subweb:$TODAY_TAG
-        ALIYUN_IMAGE=$ALIYUN_REGISTRY/$ALIYUN_NAME_SPACE/subweb:$TODAY_TAG
-        docker tag $IMAGE_NAME $ALIYUN_IMAGE
+        
+        # 定义两个目标镜像地址
+        ALIYUN_IMAGE_DATE=$ALIYUN_REGISTRY/$ALIYUN_NAME_SPACE/subweb:$TODAY_TAG
+        ALIYUN_IMAGE_LATEST=$ALIYUN_REGISTRY/$ALIYUN_NAME_SPACE/subweb:latest
+        
+        # 打双标签
+        docker tag $IMAGE_NAME $ALIYUN_IMAGE_DATE
+        docker tag $IMAGE_NAME $ALIYUN_IMAGE_LATEST
 
-        if docker push $ALIYUN_IMAGE; then
-          echo "PUSH_RESULT=success" >> $GITHUB_ENV
-        else
-          echo "PUSH_RESULT=failure" >> $GITHUB_ENV
+        # 初始化状态为失败
+        echo "PUSH_RESULT=failure" >> $GITHUB_ENV
+        
+        # 先推送日期标签，成功后推送 Latest 标签
+        if docker push $ALIYUN_IMAGE_DATE; then
+          if docker push $ALIYUN_IMAGE_LATEST; then
+            echo "PUSH_RESULT=success" >> $GITHUB_ENV
+          fi
         fi
-        docker rmi $ALIYUN_IMAGE || true
+        
+        # 清理本地镜像 (包含 latest)
+        docker rmi $ALIYUN_IMAGE_DATE $ALIYUN_IMAGE_LATEST $IMAGE_NAME || true
 
-        # ===== 安全删除旧镜像，只保留最近10个 =====
+        # ===== 安全删除旧镜像，只保留最近10个 (排除Latest) =====
         REPO=$ALIYUN_NAME_SPACE/subweb
         TAGS_JSON=$(curl -s -u "$ALIYUN_REGISTRY_USER:$ALIYUN_REGISTRY_PASSWORD" \
           "https://$ALIYUN_REGISTRY/v2/$REPO/tags/list")
 
-        # 如果仓库为空或者 tags=null，使用空数组 []
-        TAGS=$(echo "$TAGS_JSON" | jq -r '.tags // [] | sort | reverse')
+        # 使用 jq 过滤掉 "latest" 标签，并处理空值情况
+        TAGS=$(echo "$TAGS_JSON" | jq -r '.tags // [] | map(select(. != "latest")) | sort | reverse')
 
         COUNT=0
         for TAG in $TAGS; do
+          # 过滤掉 jq 输出的括号等无效字符
+          [[ "$TAG" == "[" || "$TAG" == "]" || -z "$TAG" ]] && continue
+          
           COUNT=$((COUNT+1))
           if [ $COUNT -gt 10 ]; then
             echo "删除旧镜像: $ALIYUN_REGISTRY/$REPO:$TAG"
@@ -86,8 +101,9 @@ jobs:
       if: always()
       run: |
         TODAY_TAG=$(date +'%m%d')
-        DISPLAY_NAME="sub-web:$TODAY_TAG"
-        FULL_IMAGE_PATH="${{ env.ALIYUN_REGISTRY }}/${{ env.ALIYUN_NAME_SPACE }}/subweb:$TODAY_TAG"
+        DISPLAY_NAME="subweb:$TODAY_TAG (及 latest)"
+        FULL_IMAGE_PATH_DATE="${{ env.ALIYUN_REGISTRY }}/${{ env.ALIYUN_NAME_SPACE }}/subweb:$TODAY_TAG"
+        FULL_IMAGE_PATH_LATEST="${{ env.ALIYUN_REGISTRY }}/${{ env.ALIYUN_NAME_SPACE }}/subweb:latest"
         BUILD_TIME=$(TZ='Asia/Shanghai' date "+%Y-%m-%d %H:%M:%S")
 
         MSG="📦 *镜像构建通知*\n\n"
@@ -97,7 +113,9 @@ jobs:
         if [ "${{ env.PUSH_RESULT }}" == "success" ]; then
           STATUS="阿里云 ✅"
           MSG+="*推送状态*: $STATUS\n"
-          MSG+="*订阅地址*: \`$FULL_IMAGE_PATH\`"
+          MSG+="*镜像地址*:\n"
+          MSG+="- 日期版: \`$FULL_IMAGE_PATH_DATE\`\n"
+          MSG+="- 最新版: \`$FULL_IMAGE_PATH_LATEST\`"
         else
           STATUS="阿里云 ❌"
           MSG+="*推送状态*: $STATUS"
