@@ -241,11 +241,6 @@ export default {
                 label: "Custom_Clash",
                 value:
                   "https://wb.xczns.top:58808/VPN/Aethersailor/Custom_Clash.ini"
-              },
-              {
-               label: "Shadowrocket",
-               value:
-                  "https://wb.xczns.top:58808/VPN/GeneralClashRule/Shadowrocket.ini"
               }
             ]
           },
