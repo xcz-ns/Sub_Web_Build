@@ -244,6 +244,16 @@ export default {
               }
             ]
           },
+          {
+            label: "Personal",
+            options: [
+              {
+                label: "Custom_Clash_Mini",
+                value:
+                  "https://wb.xczns.top:58808/VPN/Aethersailor/Custom_Clash_Mini.ini"
+              }
+            ]
+          },
           {  
             label: "ACL4SSR_Local",
             options: [
